@@ -1,0 +1,13 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "403 - Forbidden";
+}
+
+<div class="text-center">
+    <h1 class="display-1 text-danger">403 - Forbidden</h1>
+    <p class="lead">You do not have permission to access this resource.</p>
+    <p>Please contact the administrator if you believe you should have access to this resource.</p>
+    
+    <a asp-page="/Index" class="btn btn-primary">Go to Home</a>
+</div>

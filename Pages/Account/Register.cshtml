@@ -1,0 +1,154 @@
+﻿@page
+@model Appsec_webapp.Pages.Account.RegisterModel
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Register";
+}
+@{
+    var reCAPTCHA_site_key = Configuration["reCAPTCHA:SiteKey"];
+}
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+   function onSubmit(token) {
+     document.getElementById("reg_form").submit();
+   }
+</script>
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center align-items-center">
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <h1 class="mb-3">Register for an account</h1>
+            <form id="reg_form" method="post" enctype="multipart/form-data" asp-antiforgery="true">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.FirstName">First Name</label>
+                    <input type="Text" asp-for="Input.FirstName" class="form-control" placeholder="Enter your first name" />
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.LastName">Last Name</label>
+                    <input type="Text" asp-for="Input.LastName" class="form-control" placeholder="Enter your last name" />
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.Gender">Gender</label>
+                    <select asp-for="Input.Gender" class="form-control">
+                        <option value = "">Select Your Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.NRIC">NRIC</label>
+                    <input type="Text" asp-for="Input.NRIC" class="form-control" placeholder="Enter your NRIC" />
+                    <span asp-validation-for="Input.NRIC" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.Email">Email</label>
+                    <input type="Text" asp-for="Input.Email" onkeyup="validateEmail()" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.Password">Password</label>
+                    <input id="pwd_input" type="password" asp-for="Input.Password" class="form-control" onkeyup="javascript:validate()" placeholder="Enter your password" />
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                        <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
+                    </button>
+                    <span id="pwd_error" asp-validation-for="Input.Password"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.ConfirmPassword">Confirm Password</label>
+                    <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="Re-type your password" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.DateOfBirth">Date of Birth</label>
+                    <input type="date" asp-for="Input.DateOfBirth" class="form-control" placeholder="Enter your birthday" />
+                    <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.WhoAmI">Who Am I</label>
+                    <input type="Text" asp-for="Input.WhoAmI" class="form-control" placeholder="Enter the whoami" />
+                    <span asp-validation-for="Input.WhoAmI" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Input.Resume">Resume</label>
+                    <input type="file" asp-for="Input.Resume" class="form-control"  />
+                    <span asp-validation-for="Input.Resume" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <!--<button type="submit" class="btn btn-primary">Register</button>-->
+                    <button class="g-recaptcha btn btn-primary"
+                            data-sitekey="@reCAPTCHA_site_key"
+                            data-callback='onSubmit'
+                            data-action='submit'>
+                        Register
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mb-3">
+                <a asp-page="./Login" class="text-primary">Already have an account? Login here.</a>
+            </div>
+        </div>
+
+        @section Scripts {
+            <!--<partial name="_ValidationScriptsPartial" />-->
+            <script type="text/javascript">
+                function validate() {
+                    let password = document.getElementById("pwd_input").value;
+                    let error = document.getElementById("pwd_error");
+
+                    if (password.length < 12) {
+                        error.innerHTML = "Password must be at least 12 characters long";
+                        error.style.color = "red";
+                    }
+                    else if (password.search(/[a-z]/) < 0) {
+                        error.innerHTML = "Password must contain at least one lowercase letter";
+                        error.style.color = "red";
+                    }
+                    else if (password.search(/[A-Z]/) < 0) {
+                        error.innerHTML = "Password must contain at least one uppercase letter";
+                        error.style.color = "red";
+                    }
+                    else if (password.search(/[0-9]/) < 0) {
+                        error.innerHTML = "Password must contain at least one number";
+                        error.style.color = "red";
+                    }
+                    else if (password.search(/[!@@#$%^&*]/) < 0) {
+                        error.innerHTML = "Password must contain at least one special character";
+                        error.style.color = "red";
+                    }
+                    else {
+                        error.innerHTML = "Password met the requirements!"
+                        error.style.color = "blue"
+                    }
+                }
+
+                document.getElementById('togglePassword').addEventListener('click', function (e) {
+                    const passwordInput = document.getElementById('pwd_input');
+                    const passwordIcon = document.getElementById('togglePasswordIcon');
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    passwordIcon.classList.toggle('bi-eye');
+                    passwordIcon.classList.toggle('bi-eye-slash');
+                });
+            </script>
+        }
+    </div>
+</div>

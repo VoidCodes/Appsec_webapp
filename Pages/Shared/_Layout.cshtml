@@ -1,0 +1,154 @@
+﻿@using Appsec_webapp.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Newtonsoft.Json
+
+@inject IHttpContextAccessor context;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var userDetail = await UserManager.GetUserAsync(User);
+    //var userEmail = context.HttpContext?.Session.GetString("Email");
+    var userDataJson = context.HttpContext?.Session.GetString("Userdata");
+    //var userData = JsonConvert.DeserializeObject<ApplicationUser>(userDataJson);
+    var userData = userDataJson != null ? JsonConvert.DeserializeObject<ApplicationUser>(userDataJson) : null;
+    var sessionId = context.HttpContext?.Session.GetString("SessionID");
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ace Job Agency</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Appsec_webapp.styles.css" asp-append-version="true" />
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">Ace Job Agency</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                @{
+                    if (User.Identity!.IsAuthenticated && SignInManager.IsSignedIn(User) && userDetail != null)
+                    {
+                        <ul class="navbar-nav ms-auto">
+                            <li id="profile" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Profile">Profile</a>
+                            </li>
+                            <li id="logout" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Logout</a>
+                            </li>
+                            <li id="changepw" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/ChangePassword">Change Password</a>
+                            </li>
+                            <p id="welcome" class="nav-link text-dark">Welcome, @userData?.FirstName</p>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav ms-auto">
+                            <li id="register" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Register</a>
+                            </li>
+                            <li id="login" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Login</a>
+                            </li>
+                            <li id="profile-link" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Profile">Profile</a>
+                            </li>
+                            <li id="logout-link" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Logout">Logout</a>
+                            </li>
+                            <li id="changepw-link" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/ChangePassword">Change Password</a>
+                            </li>  
+                            <li id="welcome" class="nav-item">
+                                <a class="nav-link text-dark" onclick="return false;">Welcome, @userData?.FirstName</a>
+                            </li>
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+    
+    <!---<div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Notice:</strong> This is a demo website for the purpose of the assignment. Please do not submit any sensitive information.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    @*@if (Context.Request.Query["sessionExpired"] == "true")
+    {
+        <div class="alert alert-danger">You were logged out because your account was accessed from another device.</div>
+    }*@
+    <script>
+        let sessionId = @Html.Raw(JsonConvert.SerializeObject(sessionId));
+        console.log("Session ID: ", sessionId);
+        let userData = @Html.Raw(JsonConvert.SerializeObject(userData));
+        console.log("Userdata: ", userData);
+        let logoutLink = document.getElementById("logout-link");
+        let profileLink = document.getElementById("profile-link");
+        let changepwLink = document.getElementById("changepw-link");
+        let changepw = document.getElementById("changepw");
+        let welcome = document.getElementById("welcome");
+        let register = document.getElementById("register");
+        let login = document.getElementById("login");
+        
+        if (userData == null) {
+            welcome.style.display = "none"
+            logoutLink.style.display = "none"
+            profileLink.style.display = "none"
+            changepwLink.style.display = "none"
+        }
+        else {
+            login.style.display = "none"
+            register.style.display = "none"
+            profileLink.style.display = "block"
+            logoutLink.style.display = "block"
+            changepwLink.style.display = "block"
+        }
+    </script>
+</header>
+    <!--<div class="container">
+        <main role="main" class="pb-3">
+            @*@if (userData == null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    Session expired or not available. Please <a href="/Account/Login" class="alert-link">login</a> again.
+                </div>
+            }
+            else
+            {
+                @RenderBody()
+            }*@
+        </main>
+    </div>-->
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
