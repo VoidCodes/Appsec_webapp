@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using System.Net;
 
 namespace Appsec_webapp
 {
@@ -9,7 +10,8 @@ namespace Appsec_webapp
             using (var client = new HttpClient())
             {
                 var content = new MultipartFormDataContent();
-                content.Add(new StringContent(recaptchaResponse), "response");
+                var sanitizedRecaptchaResponse = WebUtility.HtmlEncode(recaptchaResponse);
+                content.Add(new StringContent(sanitizedRecaptchaResponse), "response");
                 content.Add(new StringContent(secretKey), "secret");
 
                 var response = await client.PostAsync(verificationUrl, content);
