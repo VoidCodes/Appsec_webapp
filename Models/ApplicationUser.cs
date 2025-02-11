@@ -35,7 +35,7 @@ namespace Appsec_webapp.Models
         public string ResumeFilePath { get; set; }
         [Required]
         public string WhoAmI { get; set; }
-        public byte[] Salt { get; set; }
+        public byte[] salt { get; set; }
         public string? SessionToken { get; set; }
     }
 }
