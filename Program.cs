@@ -68,7 +68,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Account/Logout";
     options.AccessDeniedPath = "/ErrorPages/AccessDenied";
     options.Cookie.Name = "MyCookieAuthenticationScheme";
-    options.ExpireTimeSpan = /*TimeSpan.FromMinutes(5);*/ TimeSpan.FromSeconds(10);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5); /*TimeSpan.FromSeconds(10);*/
     options.SlidingExpiration = true;
 });
 
@@ -87,7 +87,7 @@ builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = /*TimeSpan.FromMinutes(5);*/ TimeSpan.FromSeconds(10);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5); /*TimeSpan.FromSeconds(10);*/
         options.SlidingExpiration = true;
 
         options.Events.OnRedirectToLogin = context =>
