@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Appsec_webapp.Migrations;
+//using Appsec_webapp.Migrations;
 using Appsec_webapp.Models;
 using Appsec_webapp.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -114,7 +114,7 @@ namespace Appsec_webapp.Pages.Account
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password 2.");
+                ModelState.AddModelError(string.Empty, "Invalid email or password.");
                 return Page();
             }
         }

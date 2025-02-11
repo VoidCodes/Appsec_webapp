@@ -171,7 +171,7 @@ namespace Appsec_webapp.Pages.Account
                 DateOfBirth = sanitizedDob,
                 //Resume = Input.Resume,
                 WhoAmI = sanitizedWhoAmI,
-                Salt = saltBytes
+                salt = saltBytes
             };
 
             if (Input.Resume != null)
