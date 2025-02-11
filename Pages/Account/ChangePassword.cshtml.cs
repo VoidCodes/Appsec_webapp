@@ -69,14 +69,15 @@ namespace Appsec_webapp.Pages.Account
             if (sessionUser == null || string.IsNullOrEmpty(sessionUser.Id.ToString()))
             {
                 ModelState.AddModelError(string.Empty, "User not found 1.");
-                //return RedirectToPage("/Account/Login");
+                return RedirectToPage("/Account/Login");
             }
 
             var user = await _userManager.FindByIdAsync(sessionUser!.Id.ToString());
+            //var user = await _userManager.FindByEmailAsync(sessionUser!.Email!);
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "User not found 2.");
-                //return RedirectToPage("/Account/Login");
+                return RedirectToPage("/Account/Login");
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user!, Input.CurrentPassword, Input.NewPassword);
